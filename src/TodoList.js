@@ -1,72 +1,61 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./TodoList.css";
+import { observable, action, reaction } from "mobx";
+import { observer } from "mobx-react";
 
+@observer
 class TodoList extends Component {
-  state = {
-    inputItem: "",
-    listFlag: "all",
-    allList: [
-      { title: "读书", isCompleted: false },
-      { title: "看电影", isCompleted: false }
-    ],
-    activingList: [],
-    completedList: [],
-    searchKeyword: ""
-  };
+  @observable inputItem = "";
+  @observable listFlag = "all";
+  @observable
+  allList = [
+    { title: "读书", isCompleted: false },
+    { title: "看电影", isCompleted: false }
+  ];
+  @observable searchKeyword = "";
+
+  @action
   handleInputItem = e => {
     console.log(e.target);
-    this.setState({
-      inputItem: e.target.value
-    });
-    console.log("输入项：" + this.state.inputItem);
+    this.inputItem = e.target.value;
+    console.log(this.inputItem);
   };
+  @action
   handleSearch = e => {
-    this.setState({
-      searchKeyword: e.target.value
-    });
-    console.log("输入项：" + this.state.searchKeyword);
+    this.searchKeyword = e.target.value;
+    console.log("输入项：" + this.searchKeyword);
   };
+  @action
   handleComplete = (e, index) => {
     e.persist();
-    this.setState((prevState, props) => {
-      let tmpData = prevState.allList.concat([]);
-      tmpData[index].isCompleted = e.target.checked;
-      return {
-        allList: tmpData
-      };
-    });
+    this.allList[index].isCompleted = e.target.checked;
   };
+  @action
   handleChg = listFlag => {
-    this.setState({
-      listFlag: listFlag
-    });
+    this.listFlag = listFlag;
   };
+  @action
   handleDelete = index => {
-    let tmpData = this.state.allList.concat([]);
-    console.log(tmpData);
-    console.log(index);
-    tmpData.splice(index, 1);
-    this.setState({
-      allList: tmpData
-    });
+    this.allList.splice(index, 1);
   };
+  @action
   addItem = () => {
-    let tmpItem = { title: this.state.inputItem, isCompleted: false };
-    this.setState({
-      allList: this.state.allList.concat(tmpItem)
-    });
+    let tmpItem = { title: this.inputItem, isCompleted: false };
+    this.allList.push(tmpItem);
   };
+  @action
   searchItems = () => {
-    console.log("搜索关键字：" + this.state.searchKeyword);
+    console.log("搜索关键字：" + this.searchKeyword);
   };
+
   render() {
     return (
       <div className="todoList">
         <input
           type="text"
           name="todo"
-          value={this.state.inputItem}
+          defaultValue={this.inputItem}
           onChange={this.handleInputItem}
           placeholder="输入待办项"
         />
@@ -74,7 +63,7 @@ class TodoList extends Component {
         <input
           type="text"
           name="search"
-          value={this.state.searchKeyword}
+          value={this.searchKeyword}
           onChange={this.handleSearch}
           placeholder="输入查询关键字"
         />
@@ -85,13 +74,13 @@ class TodoList extends Component {
           <span onClick={() => this.handleChg("completed")}>已完成</span>
         </div>
         <div className="list-all">
-          {this.state.allList.map((item, index) => {
+          {this.allList.map((item, index) => {
             return (
-              (this.state.listFlag === "all" ||
-                (this.state.listFlag === "activing" && !item.isCompleted) ||
-                (this.state.listFlag === "completed" && item.isCompleted)) &&
-              (!this.state.searchKeyword ||
-                item.title.indexOf(this.state.searchKeyword) > -1) && (
+              (this.listFlag === "all" ||
+                (this.listFlag === "activing" && !item.isCompleted) ||
+                (this.listFlag === "completed" && item.isCompleted)) &&
+              (!this.searchKeyword ||
+                item.title.indexOf(this.searchKeyword) > -1) && (
                 <div
                   key={index}
                   className={item.isCompleted ? "completed" : ""}
@@ -115,10 +104,6 @@ class TodoList extends Component {
             );
           })}
         </div>
-
-        <div className="list-activing" />
-
-        <div className="list-completed" />
       </div>
     );
   }
