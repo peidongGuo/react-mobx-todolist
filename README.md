@@ -1,44 +1,21 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# react-mobx-todolist
 
-## Available Scripts
+用 react 、mobx 组合实现一个 todolist 的 Demo
 
-In the project directory, you can run:
+### 命令行
 
-### `npm start`
+```sh
+   create-react-app
+```
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### app 功能
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+1. 在输入框中输入内容后按 enter 键，即可把内容添加到下面的列表中（如果内容为空则不添加）
+2. 动态计算有几个未完成的任务
+3. 点击复选框，实现选中或不选中效果（即完成或未完成）
+4. 鼠标移入列表，会出现一个删除按钮，点击删除按钮即可删除该列表
+5. 双击列表中的内容，可对列表内容进行编辑,编辑完成后，按 enter 键完成编辑，或者当输入框失去焦点的时候也是完成编辑,如果想要取消修改，按 esc 键即可取消编辑
+6. 单击上面的所有任务、未完成任务、已完成任务，三个按钮可以切换任务列表
+7. 搜索功能，能根据关键字搜索各个列表的数据
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 2018.11.6 完成 react 版本
