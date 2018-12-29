@@ -5,10 +5,12 @@
   "dependencies": {
     "mobx": "^5.6.0",
     "mobx-react": "^5.3.6",
+    "mobx-react-devtools": "^6.0.3",
     "react": "^16.6.3",
     "react-app-rewire-mobx": "^1.0.9",
     "react-app-rewired": "^1.6.2",
     "react-dom": "^16.6.3",
+    "react-draggable": "^3.0.5",
     "react-scripts": "2.1.1"
   },
   "scripts": {

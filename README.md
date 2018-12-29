@@ -19,3 +19,15 @@
 7. 搜索功能，能根据关键字搜索各个列表的数据
 
 ### 2018.11.6 完成 react 版本
+
+### 2018.11.14 完成 react-mobx 版本
+
+- 当前版本，可观察的变量放在了组件里面，变成局部状态
+
+### 最难的问题：
+
+- create-react-app 与 mobx 的配置使用
+
+* 因为要用到装饰器，所以需要用 babel，但之前 create-react-app 版本是 v1.5.13 用了 npm run eject，然后 install babel-plugin-transform-decorators-legacy，最后配置了 babelrc 文件，一样是不报错但变量不能被观察，这个错误差点让我对 mobx 产生了怀疑。
+* 后来将 create-react-app 升级到 v2.1.1，用 react-app-rewired + customize-cra 再加上相应配置就好了。
+* 可以把这个配置写个博文。

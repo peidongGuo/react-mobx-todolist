@@ -5,22 +5,30 @@ import App from "./App";
 import TodoList from "./TodoList";
 import * as serviceWorker from "./serviceWorker";
 import TestComponent from "./TestComponent";
-import TestStore from "./TestStore";
-// import DevTools from "mobx-react-devtools";
+import TodoStore from "./TodoStore";
+import DevTools from "mobx-react-devtools";
 import Counter from "./Counter";
-const store = new TestStore();
+import DragDemo from "./Drag";
+const store = new TodoStore();
+import context from "./context";
+import { Provider } from "mobx-react";
+
+// const ThemeContext = context;
+// console.log(ThemeContext);
+// const tmpObj = { name: "gpd", age: "30" };
 ReactDOM.render(
-  <div>
-    <Counter />
-    <TestComponent store={store} />
-    <TodoList />
-  </div>,
+  // <ThemeContext.Provider value="dark">
+  <Provider {...store}>
+    <div>
+      {/* <DragDemo /> */}
+      <Counter />
+      {/* <TestComponent store={store} /> */}
+      {/* <TodoList store={store} /> */}
+    </div>
+  </Provider>,
+  // </ThemeContext.Provider>,
   document.getElementById("root")
 );
-
-setTimeout(() => {
-  store.chgMsg("Get a cookie as well");
-}, 2000);
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
