@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./TodoList.css";
 import { observable, action, reaction, computed, autorun, trace } from "mobx";
 

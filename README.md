@@ -31,3 +31,11 @@
 * 因为要用到装饰器，所以需要用 babel，但之前 create-react-app 版本是 v1.5.13 用了 npm run eject，然后 install babel-plugin-transform-decorators-legacy，最后配置了 babelrc 文件，一样是不报错但变量不能被观察，这个错误差点让我对 mobx 产生了怀疑。
 * 后来将 create-react-app 升级到 v2.1.1，用 react-app-rewired + customize-cra 再加上相应配置就好了。
 * 可以把这个配置写个博文。
+
+### 2019.1.7
+
+1.  完成 TodoList 样式的拷坝
+
+### 2019.1.8
+
+1.  完成 TodoList 的 react 原始版本和 mobx 版本

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./TodoList.css";
 import { decorate, observable, action, reaction } from "mobx";
 import { observer } from "mobx-react";
