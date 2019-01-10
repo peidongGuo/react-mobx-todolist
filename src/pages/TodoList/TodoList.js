@@ -1,64 +1,84 @@
 import React, { Component } from "react";
 import "./TodoList.css";
-import { decorate, observable, action, reaction } from "mobx";
-import { observer } from "mobx-react";
 
-@observer
 class TodoList extends Component {
-  @observable inputItem = "";
-  @observable listFlag = "all";
-  @observable searchKeyword = "";
-  @observable allList = [];
-  @action
+  state = {
+    inputItem: "",
+    listFlag: "all",
+    allList: []
+  };
+
   handleInputItem = e => {
-    console.log(e.target);
-    this.inputItem = e.target.value;
-    console.log(this.inputItem);
+    this.setState({
+      inputItem: e.target.value
+    });
   };
-  @action
-  handleSearch = e => {
-    this.searchKeyword = e.target.value;
-    console.log("输入项：" + this.searchKeyword);
-  };
-  @action
-  handleComplete = (e, index) => {
+
+  handleItemStatus = (e, index) => {
     e.persist();
-    this.allList[index].isCompleted = e.target.checked;
+    let items = this.state.allList;
+    console.log(items, index);
+    items[index].isCompleted = e.target.checked;
+    this.setState({
+      allList: items
+    });
   };
-  @action
-  handleToggle = (e, index) => {
+
+  handleItemEdit = (index, isEdit) => {
+    // e.persist();
+    let items = this.state.allList;
+    items[index].isEditing = !!isEdit;
+    this.setState({
+      allList: items
+    });
+  };
+  handleItemTitle = (e, index) => {
     e.persist();
-    this.allList[index].isCompleted = e.target.checked;
+    let items = this.state.allList;
+    console.log(items, index);
+    items[index].title = e.target.value;
+    this.setState({
+      allList: items
+    });
   };
-  @action
-  handleChg = listFlag => {
-    this.listFlag = listFlag;
+
+  handleItemDelete = index => {
+    let items = this.state.allList;
+    items.splice(index, 1);
+    this.setState({
+      allList: items
+    });
   };
-  @action
-  handleDelete = index => {
-    this.allList.splice(index, 1);
+
+  handleListChg = listFlag => {
+    this.setState({
+      listFlag: listFlag
+    });
   };
-  // @action
-  addItem = event => {
+
+  handleAddItem = event => {
     if (event.keyCode !== 13) {
       return;
     }
-    if (!this.inputItem) {
+    if (!this.state.inputItem) {
       return;
     }
-    let tmpItem = { title: this.inputItem, isCompleted: false };
-    this.allList.push(tmpItem);
-    this.inputItem = "";
-  };
-  @action
-  searchItems = () => {
-    console.log("搜索关键字：" + this.searchKeyword);
+    let tmpItem = { title: this.state.inputItem, isCompleted: false };
+    let items = this.state.allList;
+    items.push(tmpItem);
+    this.setState({
+      inputItem: "",
+      allList: items
+    });
   };
 
-  @action
-  clearCompleted = () => {
-    this.allList.forEach((item, index) => {
-      item.isCompleted && this.allList.splice(index, 1);
+  handleClearCompleted = () => {
+    let items = this.state.allList;
+    items.forEach((item, index) => {
+      item.isCompleted && items.splice(index, 1);
+    });
+    this.setState({
+      allList: items
     });
   };
 
@@ -69,35 +89,33 @@ class TodoList extends Component {
           <div>
             <div className="header">
               <h1>todos</h1>
-              <input
-                id="toggle-all"
-                class="toggle-all"
-                type="checkbox"
-                checked=""
-                data-reactid=".0.1.0"
-              />
-              <label for="toggle-all" />
+              <input id="toggle-all" className="toggle-all" type="checkbox" />
+              <label htmlFor="toggle-all" />
               <input
                 className="new-todo"
                 placeholder="What needs to be done?"
-                value={this.inputItem}
+                value={this.state.inputItem}
                 onChange={this.handleInputItem}
-                onKeyDown={this.addItem}
+                onKeyDown={this.handleAddItem}
                 autoFocus={true}
               />
             </div>
             <div className="main">
               <ul className="todo-list">
-                {this.allList.map((item, index) => {
+                {this.state.allList.map((item, index) => {
                   return (
-                    (this.listFlag === "all" ||
-                      (this.listFlag === "activing" && !item.isCompleted) ||
-                      (this.listFlag === "completed" && item.isCompleted)) &&
-                    (!this.searchKeyword ||
-                      item.title.indexOf(this.searchKeyword) > -1) && (
+                    (this.state.listFlag === "all" ||
+                      (this.state.listFlag === "activing" &&
+                        !item.isCompleted) ||
+                      (this.state.listFlag === "completed" &&
+                        item.isCompleted)) && (
                       <li
                         className={item.isCompleted ? "completed" : ""}
+                        className={item.isEditing ? "editing" : ""}
                         key={index}
+                        onDoubleClick={() => {
+                          this.handleItemEdit(index, true);
+                        }}
                       >
                         <div className="view">
                           <input
@@ -105,16 +123,26 @@ class TodoList extends Component {
                             type="checkbox"
                             checked={item.isCompleted}
                             onChange={e => {
-                              item.isCompleted = !item.isCompleted;
+                              this.handleItemStatus(e, index);
                             }}
                           />
                           <label>{item.title}</label>
-                          <button className="destroy" />
+                          <button
+                            className="destroy"
+                            onClick={() => {
+                              this.handleItemDelete(index);
+                            }}
+                          />
                         </div>
                         <input
                           className="edit"
-                          value="{item}"
-                          onChange={this.handleChg}
+                          value={item.title}
+                          onChange={e => {
+                            this.handleItemTitle(e, index);
+                          }}
+                          onBlur={e => {
+                            this.handleItemEdit(index, false);
+                          }}
                         />
                       </li>
                     )
@@ -125,7 +153,7 @@ class TodoList extends Component {
             <footer className="footer">
               <span className="todo-count">
                 <strong>
-                  {this.allList.filter(item => !item.isCompleted).length}
+                  {this.state.allList.filter(item => !item.isCompleted).length}
                 </strong>
                 <span> </span>
                 <span>items</span>
@@ -136,9 +164,9 @@ class TodoList extends Component {
                   <a
                     href="#/"
                     onClick={() => {
-                      this.listFlag = "all";
+                      this.handleListChg("all");
                     }}
-                    className={this.listFlag === "all" ? "selected" : ""}
+                    className={this.state.listFlag === "all" ? "selected" : ""}
                   >
                     All
                   </a>
@@ -148,9 +176,11 @@ class TodoList extends Component {
                   <a
                     href="#/active"
                     onClick={() => {
-                      this.listFlag = "activing";
+                      this.handleListChg("activing");
                     }}
-                    className={this.listFlag === "activing" ? "selected" : ""}
+                    className={
+                      this.state.listFlag === "activing" ? "selected" : ""
+                    }
                   >
                     Active
                   </a>
@@ -160,15 +190,20 @@ class TodoList extends Component {
                   <a
                     href="#/completed"
                     onClick={() => {
-                      this.listFlag = "completed";
+                      this.handleListChg("completed");
                     }}
-                    className={this.listFlag === "completed" ? "selected" : ""}
+                    className={
+                      this.state.listFlag === "completed" ? "selected" : ""
+                    }
                   >
                     Completed
                   </a>
                 </li>
               </ul>
-              <button className="clear-completed" onClick={this.clearCompleted}>
+              <button
+                className="clear-completed"
+                onClick={this.handleClearCompleted}
+              >
                 Clear completed
               </button>
             </footer>

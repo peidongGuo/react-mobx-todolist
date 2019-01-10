@@ -11,7 +11,7 @@ import {
   runInAction
 } from "mobx";
 import { inject, observer } from "mobx-react";
-import context from "./context";
+import context from "./pages/Demos/context";
 // import TodoStore from "./TodoStore";
 // configure({ enforceActions: "always" });
 // const store = new TodoStore();
