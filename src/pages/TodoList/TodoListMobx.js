@@ -7,39 +7,31 @@ import { observer } from "mobx-react";
 class TodoListMobx extends Component {
   @observable inputItem = "";
   @observable listFlag = "all";
-  @observable searchKeyword = "";
   @observable allList = [];
+
   @action
   handleInputItem = e => {
     console.log(e.target);
     this.inputItem = e.target.value;
     console.log(this.inputItem);
   };
+
   @action
-  handleSearch = e => {
-    this.searchKeyword = e.target.value;
-    console.log("输入项：" + this.searchKeyword);
-  };
-  @action
-  handleComplete = (e, index) => {
+  handleItemToggle = (e, index) => {
     e.persist();
     this.allList[index].isCompleted = e.target.checked;
   };
   @action
-  handleToggle = (e, index) => {
-    e.persist();
-    this.allList[index].isCompleted = e.target.checked;
-  };
-  @action
-  handleChg = listFlag => {
+  handleListChg = listFlag => {
     this.listFlag = listFlag;
   };
   @action
-  handleDelete = index => {
+  handleItemDelete = index => {
     this.allList.splice(index, 1);
   };
-  // @action
-  addItem = event => {
+
+  @action
+  handleAddItem = event => {
     if (event.keyCode !== 13) {
       return;
     }
@@ -50,13 +42,9 @@ class TodoListMobx extends Component {
     this.allList.push(tmpItem);
     this.inputItem = "";
   };
-  @action
-  searchItems = () => {
-    console.log("搜索关键字：" + this.searchKeyword);
-  };
 
   @action
-  clearCompleted = () => {
+  handleClearCompleted = () => {
     this.allList.forEach((item, index) => {
       item.isCompleted && this.allList.splice(index, 1);
     });
@@ -71,33 +59,39 @@ class TodoListMobx extends Component {
               <h1>todos</h1>
               <input
                 id="toggle-all"
-                class="toggle-all"
+                className="toggle-all"
                 type="checkbox"
                 checked=""
                 data-reactid=".0.1.0"
               />
-              <label for="toggle-all" />
+              <label htmlFor="toggle-all" />
               <input
                 className="new-todo"
                 placeholder="What needs to be done?"
                 value={this.inputItem}
                 onChange={this.handleInputItem}
-                onKeyDown={this.addItem}
+                onKeyDown={this.handleAddItem}
                 autoFocus={true}
               />
             </div>
             <div className="main">
               <ul className="todo-list">
                 {this.allList.map((item, index) => {
+                  const LiClass =
+                    (item.isCompleted ? "completed" : "") +
+                    " " +
+                    (item.isEdit ? "editing" : "");
+
                   return (
                     (this.listFlag === "all" ||
                       (this.listFlag === "activing" && !item.isCompleted) ||
-                      (this.listFlag === "completed" && item.isCompleted)) &&
-                    (!this.searchKeyword ||
-                      item.title.indexOf(this.searchKeyword) > -1) && (
+                      (this.listFlag === "completed" && item.isCompleted)) && (
                       <li
-                        className={item.isCompleted ? "completed" : ""}
+                        className={LiClass}
                         key={index}
+                        onDoubleClick={() => {
+                          item.isEdit = true;
+                        }}
                       >
                         <div className="view">
                           <input
@@ -109,12 +103,22 @@ class TodoListMobx extends Component {
                             }}
                           />
                           <label>{item.title}</label>
-                          <button className="destroy" />
+                          <button
+                            className="destroy"
+                            onClick={e => {
+                              this.handleItemDelete(index);
+                            }}
+                          />
                         </div>
                         <input
                           className="edit"
-                          value="{item}"
-                          onChange={this.handleChg}
+                          value={item.title}
+                          onChange={e => {
+                            item.title = e.target.value;
+                          }}
+                          onBlur={e => {
+                            item.isEdit = false;
+                          }}
                         />
                       </li>
                     )
@@ -168,7 +172,10 @@ class TodoListMobx extends Component {
                   </a>
                 </li>
               </ul>
-              <button className="clear-completed" onClick={this.clearCompleted}>
+              <button
+                className="clear-completed"
+                onClick={this.handleClearCompleted}
+              >
                 Clear completed
               </button>
             </footer>

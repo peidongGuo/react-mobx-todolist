@@ -6,10 +6,12 @@ import * as serviceWorker from "./serviceWorker";
 import DevTools from "mobx-react-devtools";
 import { Provider } from "mobx-react";
 import TodoList from "./pages/TodoList/TodoList";
+import TodoListMobx from "./pages/TodoList/TodoListMobx";
 
 ReactDOM.render(
   <div>
     <TodoList />
+    <TodoListMobx />
   </div>,
   document.getElementById("root")
 );
