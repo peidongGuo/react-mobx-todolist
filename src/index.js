@@ -7,11 +7,17 @@ import DevTools from "mobx-react-devtools";
 import { Provider } from "mobx-react";
 import TodoList from "./pages/TodoList/TodoList";
 import TodoListMobx from "./pages/TodoList/TodoListMobx";
+import TodoListMobxNoDeco from "./pages/TodoList/TodoListMobxNoDeco";
+
+import Counter from "./pages/Demos/Counter";
 
 ReactDOM.render(
   <div>
-    <TodoList />
+    {/* <TodoList />
     <TodoListMobx />
+    <TodoListMobxNoDeco /> */}
+    <Counter />
+    <DevTools />
   </div>,
   document.getElementById("root")
 );
